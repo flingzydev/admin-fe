@@ -1,15 +1,7 @@
 import { useAuth } from '../contexts/AuthContext';
 import { ADMIN_API_BASE_URL, taskTypeReverseMap } from '../constants';
 import { useEffect, useState } from 'react';
-
-interface TaskCount {
-    queue_type: number;
-    count: number;
-}
-
-interface TaskCountsResponse {
-    task_counts: TaskCount[];
-}
+import { TaskCountsResponse } from '../types';
 
 export function HomePage() {
     const { accessToken, logout } = useAuth();

@@ -7,6 +7,16 @@ export const taskStatusMap = {
   deferred: 2,
 };
 
+type TaskStatusMap = {
+  [key: number]: string;
+};
+
+export const taskStatusReverseMap: TaskStatusMap = {
+  0: "Unresolved",
+  1: "Resolved",
+  2: "Deferred",
+};
+
 export const taskTypeMap = {
   profile_report: 1,
   chat_report: 2,
