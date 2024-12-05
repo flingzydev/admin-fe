@@ -10,6 +10,7 @@ export function LoginPage() {
     const [tempPhone, setTempPhone] = useState('');
     const navigate = useNavigate();
     const { login } = useAuth();
+    const [error, setError] = useState('');
 
     const handleSendOtp = async (phone: string) => {
         try {
@@ -30,6 +31,7 @@ export function LoginPage() {
             }
         } catch (error) {
             console.error('Failed to send OTP:', error);
+            setError('Invalid phone number');
         }
     };
 
@@ -44,15 +46,18 @@ export function LoginPage() {
                 },
                 body: JSON.stringify(body)
             });
-            const data = await response.json();
-            console.log(data);
             if (response.ok) {
+                const data = await response.json();
+                console.log(data);
                 console.log("accessToken", data.access_token);
                 login(data.access_token);
                 navigate('/home');
+            } else {
+                setError('Invalid OTP');
             }
         } catch (error) {
             console.error('Failed to verify OTP:', error);
+            setError('Invalid OTP');
         }
     };
 
@@ -76,6 +81,7 @@ export function LoginPage() {
                 ) : (
                     <OtpForm onSubmit={handleVerifyOtp} />
                 )}
+                {error && <p className="text-red-500 text-center">{error}</p>}
             </div>
         </div>
     );
