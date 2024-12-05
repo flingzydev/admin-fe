@@ -1,7 +1,46 @@
 import { useAuth } from '../contexts/AuthContext';
+import { ADMIN_API_BASE_URL, taskTypeReverseMap } from '../constants';
+import { useEffect, useState } from 'react';
+
+interface TaskCount {
+    queue_type: number;
+    count: number;
+}
+
+interface TaskCountsResponse {
+    task_counts: TaskCount[];
+}
 
 export function HomePage() {
     const { accessToken, logout } = useAuth();
+    const [taskCounts, setTaskCounts] = useState<TaskCountsResponse | null>(null);
+
+    const countTasks = async () => {
+        try {
+            const response = await fetch(`${ADMIN_API_BASE_URL}/tasks/counts`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `bearer ${accessToken}`
+                },
+            });
+            if (response.ok) {
+                const data: TaskCountsResponse = await response.json();
+                console.log(data.task_counts);
+                setTaskCounts(data);
+            } else {
+                throw new Error('Failed to count tasks');
+            }
+        } catch (error) {
+            console.error('Failed to count tasks:', error);
+            throw new Error('Failed to count tasks');
+        }
+    };
+
+    useEffect(() => {
+        countTasks();
+    }, []);
 
     return (
         <div className="min-h-screen bg-gray-50 p-8">
@@ -20,15 +59,17 @@ export function HomePage() {
 
                 <div className="bg-white rounded-xl shadow-lg p-6">
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                        Task List
+                        Tasks
                     </h2>
                     <ul className="space-y-3">
-                        {[1, 2, 3].map((item) => (
+                        {taskCounts?.task_counts.map((task) => (
                             <li
-                                key={item}
+                                key={task.queue_type}
                                 className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                             >
-                                Task {item}
+                                <a href={`/tasks/${task.queue_type}`} className="hover:underline">
+                                    <span className="font-semibold">{taskTypeReverseMap[task.queue_type]}</span>
+                                </a> <span className="text-gray-500">({task.count})</span>
                             </li>
                         ))}
                     </ul>
