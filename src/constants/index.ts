@@ -1,5 +1,5 @@
 export const API_BASE_URL = "https://api-stage.flingzy.com";
-export const ADMIN_API_BASE_URL = "https://admin-stage.flingzy.com";
+export const ADMIN_API_BASE_URL = "https://admin-api-stage.flingzy.com";
 
 export const taskStatusMap = {
   unresolved: 0,
