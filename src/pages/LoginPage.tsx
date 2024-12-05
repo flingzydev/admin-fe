@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { LoginForm } from '../components/LoginForm';
 import { OtpForm } from '../components/OtpForm';
 import { useAuth } from '../contexts/AuthContext';
+import { API_BASE_URL } from '../constants';
 
 export function LoginPage() {
     const [showOtp, setShowOtp] = useState(false);
@@ -12,12 +13,17 @@ export function LoginPage() {
 
     const handleSendOtp = async (phone: string) => {
         try {
-            await fetch('/api/send-otp', {
+            const body = { "phone": `+1${phone}` };
+            const response = await fetch(`${API_BASE_URL}/auth/send-otp`, {
                 method: 'POST',
-                body: JSON.stringify({ phone })
+                body: JSON.stringify(body)
             });
-            setTempPhone(phone);
-            setShowOtp(true);
+            const data = await response.json();
+            console.log(data);
+            if (response.ok) {
+                setTempPhone(phone);
+                setShowOtp(true);
+            }
         } catch (error) {
             console.error('Failed to send OTP:', error);
         }
@@ -25,13 +31,15 @@ export function LoginPage() {
 
     const handleVerifyOtp = async (otp: string) => {
         try {
-            const response = await fetch('/api/verify-otp', {
+            const body = { "phone": `+1${tempPhone}`, "code": otp };
+            const response = await fetch(`${API_BASE_URL}/auth/check-otp`, {
                 method: 'POST',
-                body: JSON.stringify({ phone: tempPhone, otp })
+                body: JSON.stringify(body)
             });
-
+            const data = await response.json();
+            console.log(data);
             if (response.ok) {
-                login(tempPhone);
+                login(data.accessToken);
                 navigate('/home');
             }
         } catch (error) {
