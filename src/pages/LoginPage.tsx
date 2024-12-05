@@ -12,7 +12,6 @@ export function LoginPage() {
 
     const handleSendOtp = async (phone: string) => {
         try {
-            // Call your API endpoint to send OTP
             await fetch('/api/send-otp', {
                 method: 'POST',
                 body: JSON.stringify({ phone })
@@ -26,7 +25,6 @@ export function LoginPage() {
 
     const handleVerifyOtp = async (otp: string) => {
         try {
-            // Call your API endpoint to verify OTP
             const response = await fetch('/api/verify-otp', {
                 method: 'POST',
                 body: JSON.stringify({ phone: tempPhone, otp })
@@ -42,13 +40,26 @@ export function LoginPage() {
     };
 
     return (
-        <div>
-            <h1>Login</h1>
-            {!showOtp ? (
-                <LoginForm onSubmit={handleSendOtp} />
-            ) : (
-                <OtpForm onSubmit={handleVerifyOtp} />
-            )}
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
+            <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-xl shadow-lg">
+                <div className="text-center">
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                        {showOtp ? 'Enter OTP' : 'Login'}
+                    </h1>
+                    <p className="text-gray-600">
+                        {showOtp
+                            ? 'Please enter the verification code sent to your phone'
+                            : 'Enter your phone number to get started'
+                        }
+                    </p>
+                </div>
+
+                {!showOtp ? (
+                    <LoginForm onSubmit={handleSendOtp} />
+                ) : (
+                    <OtpForm onSubmit={handleVerifyOtp} />
+                )}
+            </div>
         </div>
     );
 } 
