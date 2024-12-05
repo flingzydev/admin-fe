@@ -8,7 +8,7 @@ export function HomePage() {
             <div className="max-w-4xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-2xl font-bold text-gray-900">
-                        Welcome, {accessToken}!
+                        Welcome!
                     </h1>
                     <button
                         onClick={logout}
@@ -20,7 +20,7 @@ export function HomePage() {
 
                 <div className="bg-white rounded-xl shadow-lg p-6">
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                        Content List
+                        Task List
                     </h2>
                     <ul className="space-y-3">
                         {[1, 2, 3].map((item) => (
@@ -28,7 +28,7 @@ export function HomePage() {
                                 key={item}
                                 className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                             >
-                                Item {item}
+                                Task {item}
                             </li>
                         ))}
                     </ul>

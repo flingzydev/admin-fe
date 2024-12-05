@@ -16,6 +16,10 @@ export function LoginPage() {
             const body = { "phone": `+1${phone}` };
             const response = await fetch(`${API_BASE_URL}/auth/send-otp`, {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
                 body: JSON.stringify(body)
             });
             const data = await response.json();
@@ -34,12 +38,17 @@ export function LoginPage() {
             const body = { "phone": `+1${tempPhone}`, "code": otp };
             const response = await fetch(`${API_BASE_URL}/auth/check-otp`, {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
                 body: JSON.stringify(body)
             });
             const data = await response.json();
             console.log(data);
             if (response.ok) {
-                login(data.accessToken);
+                console.log("accessToken", data.access_token);
+                login(data.access_token);
                 navigate('/home');
             }
         } catch (error) {
