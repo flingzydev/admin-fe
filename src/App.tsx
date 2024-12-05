@@ -23,8 +23,19 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route path="/tasks/:taskType" element={<PrivateRoute><TaskPage /></PrivateRoute>} />
-          <Route path="/" element={<Navigate to="/home" />} />
+          <Route path="/tasks/:taskType"
+            element={
+              <PrivateRoute>
+                <TaskPage />
+              </PrivateRoute>
+            }
+          />
+          <Route path="/"
+            element={
+              <PrivateRoute>
+                <Navigate to="/home" />
+              </PrivateRoute>
+            } />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
