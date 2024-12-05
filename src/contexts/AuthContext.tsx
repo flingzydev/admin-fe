@@ -2,11 +2,11 @@ import { createContext, useContext, useState, ReactNode, useEffect } from 'react
 
 interface AuthState {
     isAuthenticated: boolean;
-    phoneNumber: string | null;
+    accessToken: string | null;
 }
 
 interface AuthContextType extends AuthState {
-    login: (phone: string) => void;
+    login: (token: string) => void;
     logout: () => void;
 }
 
@@ -25,7 +25,7 @@ const getInitialState = (): AuthState => {
     }
     return {
         isAuthenticated: false,
-        phoneNumber: null,
+        accessToken: null,
     };
 };
 
@@ -36,17 +36,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(authState));
     }, [authState]);
 
-    const login = (phone: string) => {
+    const login = (token: string) => {
         setAuthState({
             isAuthenticated: true,
-            phoneNumber: phone,
+            accessToken: token,
         });
     };
 
     const logout = () => {
         setAuthState({
             isAuthenticated: false,
-            phoneNumber: null,
+            accessToken: null,
         });
     };
 

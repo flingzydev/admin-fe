@@ -1,14 +1,14 @@
 import { useAuth } from '../contexts/AuthContext';
 
 export function HomePage() {
-    const { phoneNumber, logout } = useAuth();
+    const { accessToken, logout } = useAuth();
 
     return (
         <div className="min-h-screen bg-gray-50 p-8">
             <div className="max-w-4xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-2xl font-bold text-gray-900">
-                        Welcome, {phoneNumber}!
+                        Welcome, {accessToken}!
                     </h1>
                     <button
                         onClick={logout}
