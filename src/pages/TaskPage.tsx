@@ -109,6 +109,10 @@ export function TaskPage() {
                     </ul>
                 </div>
 
+                {task?.queue_type === 3 && <div>
+                    <h1>Video Cropper</h1>
+                    <VideoCropper videoUrl={user?.metadata.verification_album_detail} onEdit={handleEdit}/>
+                </div>}
                 <div className="bg-white rounded-xl shadow-lg p-6">
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">
                         Destination User
@@ -141,10 +145,6 @@ export function TaskPage() {
                             Verification Album
                             Detail: {user?.metadata?.verification_album_detail ?? "No verification album detail available"}
                         </p>
-                        <div>
-                            <h1>Video Cropper</h1>
-                            <VideoCropper videoUrl={user?.metadata.verification_album_detail} onEdit={handleEdit}/>
-                        </div>
                         <div className="bg-gray-100 p-4 rounded-lg">
                             <pre className="whitespace-pre-wrap break-words font-mono text-sm">
                                 {user?.metadata ? JSON.stringify(user.metadata, null, 2) : 'No metadata'}
