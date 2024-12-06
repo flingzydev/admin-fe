@@ -3,6 +3,7 @@ import { ADMIN_API_BASE_URL, taskStatusReverseMap, taskTypeReverseMap } from '..
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Task, User } from '../types';
+import VideoCropper from "../components/VideoEditor.tsx";
 
 export function TaskPage() {
     const { accessToken, logout } = useAuth();
@@ -10,6 +11,12 @@ export function TaskPage() {
 
     const [task, setTask] = useState<Task | null>(null);
     const [user, setUser] = useState<User | null>(null);
+
+    const handleEdit = (start: number, end: number, rotation: number) => {
+        alert(`Crop video from ${start} to ${end}. rotation: ${rotation}`);
+        // Call  API here
+    };
+
 
     const getOldestTask = async () => {
         try {
@@ -130,7 +137,15 @@ export function TaskPage() {
                         <p>Is Verified: {user?.is_verified ? 'Yes' : 'No'}</p>
                         <p>Last Online: {user?.last_online}</p>
                         <p>Metadata:</p>
-                        <div className="bg-gray-50 p-4 rounded-lg">
+                        <p>
+                            Verification Album
+                            Detail: {user?.metadata?.verification_album_detail ?? "No verification album detail available"}
+                        </p>
+                        <div>
+                            <h1>Video Cropper</h1>
+                            <VideoCropper videoUrl={user?.metadata.verification_album_detail} onEdit={handleEdit}/>
+                        </div>
+                        <div className="bg-gray-100 p-4 rounded-lg">
                             <pre className="whitespace-pre-wrap break-words font-mono text-sm">
                                 {user?.metadata ? JSON.stringify(user.metadata, null, 2) : 'No metadata'}
                             </pre>
