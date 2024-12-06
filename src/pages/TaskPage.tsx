@@ -110,7 +110,6 @@ export function TaskPage() {
                 </div>
 
                 {task?.queue_type === 3 && <div>
-                    <h1>Video Cropper</h1>
                     <VideoCropper videoUrl={user?.metadata.verification_album_detail} onEdit={handleEdit}/>
                 </div>}
                 <div className="bg-white rounded-xl shadow-lg p-6">
