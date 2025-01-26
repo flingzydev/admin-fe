@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { Task, User } from '../types';
 import VideoCropper from "../components/VideoEditor.tsx";
 import {Link} from "react-router-dom"
+import UserCard from "../components/UserCard.tsx";
 
 export function TaskPage() {
     const { accessToken, logout } = useAuth();
@@ -249,45 +250,7 @@ export function TaskPage() {
                     </div>
                 )}
 
-                <div className="bg-white rounded-xl shadow-lg p-6">
-                    <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                        Destination User
-                    </h2>
-                    <div className="overflow-y-auto max-h-[500px]">
-                        <p>User ID: {user?.id}</p>
-                        <p>Username: {user?.username}</p>
-                        <p>Phone: {user?.phone}</p>
-                        <p>Email: {user?.email}</p>
-                        <p>Gender: {user?.gender}</p>
-                        <p>Birthday: {user?.birthday}</p>
-                        <p>Height: {user?.height}</p>
-                        <p>Body Type: {user?.body_type}</p>
-                        <p>Ethnicity: {user?.ethnicity}</p>
-                        <p>Drink: {user?.drink}</p>
-                        <p>Smoke: {user?.smoke}</p>
-                        <p>Tattoo: {user?.tattoo}</p>
-                        <p>MBTI: {user?.mbti}</p>
-                        <p>Relationship Speed: {user?.relationship_speed}</p>
-                        <p>Created At: {user?.created_at}</p>
-                        <p>Updated At: {user?.updated_at}</p>
-                        <p>Deleted: {user?.deleted ? 'Yes' : 'No'}</p>
-                        <p>Is Hidden: {user?.is_hidden ? 'Yes' : 'No'}</p>
-                        <p>Is Onboarded: {user?.is_onboarded ? 'Yes' : 'No'}</p>
-                        <p>Is Online: {user?.is_online ? 'Yes' : 'No'}</p>
-                        <p>Is Verified: {user?.is_verified ? 'Yes' : 'No'}</p>
-                        <p>Last Online: {user?.last_online}</p>
-                        <p>Metadata:</p>
-                        <p>
-                            Verification Album
-                            Detail: {user?.metadata?.verification_album_original_detail ?? "No verification album detail available"}
-                        </p>
-                        <div className="bg-gray-100 p-4 rounded-lg">
-                            <pre className="whitespace-pre-wrap break-words font-mono text-sm">
-                                {user?.metadata ? JSON.stringify(user.metadata, null, 2) : 'No metadata'}
-                            </pre>
-                        </div>
-                    </div>
-                </div>
+                <UserCard user={user} />
             </div>
         </div>
     );

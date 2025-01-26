@@ -1,45 +1,81 @@
 import { useAuth } from '../contexts/AuthContext';
-import { ADMIN_API_BASE_URL, taskTypeReverseMap } from '../constants';
+import { ADMIN_API_BASE_URL, taskTypeMap, taskTypeReverseMap } from '../constants';
 import { useEffect, useState } from 'react';
-import { TaskCountsResponse } from '../types';
+
+interface TaskCount {
+    queue_type: number;
+    count: number;
+}
+
+interface TaskCountsResponse {
+    task_counts: TaskCount[];
+}
 
 export function HomePage() {
     const { accessToken, logout } = useAuth();
-    const [taskCounts, setTaskCounts] = useState<TaskCountsResponse | null>(null);
+    const [taskCounts, setTaskCounts] = useState<Map<number, number>>(new Map());
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     const countTasks = async () => {
+        setIsLoading(true);
+        setError(null);
         try {
             const response = await fetch(`${ADMIN_API_BASE_URL}/tasks/counts`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    'Authorization': `bearer ${accessToken}`
+                    'Authorization': `Bearer ${accessToken}`
                 },
             });
-            if (response.ok) {
-                const data: TaskCountsResponse = await response.json();
-                console.log(data.task_counts);
-                setTaskCounts(data);
-            } else {
-                throw new Error('Failed to count tasks');
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
+
+            const data: TaskCountsResponse = await response.json();
+            const countsMap = new Map(
+                data.task_counts.map(({queue_type, count}) => [queue_type, count])
+            );
+            setTaskCounts(countsMap);
         } catch (error) {
+            setError(error instanceof Error ? error.message : 'Failed to fetch tasks');
             console.error('Failed to count tasks:', error);
-            throw new Error('Failed to count tasks');
+        } finally {
+            setIsLoading(false);
         }
     };
 
     useEffect(() => {
         countTasks();
-    }, []);
+    }, [accessToken]);
+
+    // Generate list items for all task types, whether there's data or not
+    const taskItems = Object.entries(taskTypeMap).map(([, queueType]) => {
+        const count = taskCounts.get(queueType) ?? 0;
+        return (
+            <li key={queueType}
+                className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <a href={`/tasks/${queueType}`}
+                   className="hover:underline">
+                    <span className="font-semibold">
+                        {taskTypeReverseMap[queueType]}
+                    </span>
+                </a>
+                <span className="text-gray-500 ml-2">
+                    ({count})
+                </span>
+            </li>
+        );
+    });
 
     return (
         <div className="min-h-screen bg-gray-50 p-8">
             <div className="max-w-4xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-2xl font-bold text-gray-900">
-                        Welcome!
+                        Task Dashboard
                     </h1>
                     <button
                         onClick={logout}
@@ -51,26 +87,21 @@ export function HomePage() {
 
                 <div className="bg-white rounded-xl shadow-lg p-6">
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                        Tasks
+                        Tasks Overview
                     </h2>
-                    {!taskCounts?.task_counts?.length ? (
-                        <p className="text-gray-500 p-4 text-center">No tasks available</p>
+                    {isLoading ? (
+                        <div className="text-center p-4">Loading...</div>
+                    ) : error ? (
+                        <div className="text-red-600 p-4 text-center">
+                            {error}
+                        </div>
                     ) : (
                         <ul className="space-y-3">
-                            {taskCounts.task_counts.map((task) => (
-                                <li
-                                    key={task.queue_type}
-                                    className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                                >
-                                    <a href={`/tasks/${task.queue_type}`} className="hover:underline">
-                                        <span className="font-semibold">{taskTypeReverseMap[task.queue_type]}</span>
-                                    </a> <span className="text-gray-500">({task.count})</span>
-                                </li>
-                            ))}
+                            {taskItems}
                         </ul>
                     )}
                 </div>
             </div>
         </div>
     );
-} 
+}

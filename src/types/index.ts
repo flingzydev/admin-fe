@@ -1,3 +1,4 @@
+
 export interface TaskCount {
   queue_type: number;
   count: number;
@@ -45,6 +46,7 @@ export interface User {
   body_type: number;
   created_at: string;
   deleted: boolean;
+  blocked: boolean;
   drink: number;
   email: string;
   ethnicity: number;
