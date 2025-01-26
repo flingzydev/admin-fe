@@ -32,7 +32,8 @@ interface UserMetadata {
   private_album_details?: string; // JSON string with details of the private album
   verification_album?: string; // Blob ID for the verification album
   verification_album_detail?: string; // JSON string with details of the verification album
-  verification_album_original?: string; // S3 key for the original verification video
+  verification_album_original_detail?: string;
+  verification_album_original_edited_detail?: string;
   verification_album_review_in_progress?: number; // 1 if review is in progress, 0 otherwise
   age?: number; // User's age (calculated on the fly)
   is_favorite?: number; // 1 if the user is marked as a favorite

@@ -53,18 +53,22 @@ export function HomePage() {
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">
                         Tasks
                     </h2>
-                    <ul className="space-y-3">
-                        {taskCounts?.task_counts.map((task) => (
-                            <li
-                                key={task.queue_type}
-                                className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                            >
-                                <a href={`/tasks/${task.queue_type}`} className="hover:underline">
-                                    <span className="font-semibold">{taskTypeReverseMap[task.queue_type]}</span>
-                                </a> <span className="text-gray-500">({task.count})</span>
-                            </li>
-                        ))}
-                    </ul>
+                    {!taskCounts?.task_counts?.length ? (
+                        <p className="text-gray-500 p-4 text-center">No tasks available</p>
+                    ) : (
+                        <ul className="space-y-3">
+                            {taskCounts.task_counts.map((task) => (
+                                <li
+                                    key={task.queue_type}
+                                    className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                                >
+                                    <a href={`/tasks/${task.queue_type}`} className="hover:underline">
+                                        <span className="font-semibold">{taskTypeReverseMap[task.queue_type]}</span>
+                                    </a> <span className="text-gray-500">({task.count})</span>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
             </div>
         </div>

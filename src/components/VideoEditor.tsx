@@ -158,7 +158,7 @@ const VideoEditor: React.FC<VideoEditorProps> = ({ videoUrl, onEdit }) => {
 
     const formatTime = (time: number) => time.toFixed(2);
 
-    const containerSize = 500;
+    const containerSize = 455;
 
     const videoContainerStyle = {
         width: `${containerSize}px`,
