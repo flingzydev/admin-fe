@@ -8,7 +8,7 @@ interface TaskCount {
 }
 
 interface TaskCountsResponse {
-    task_counts: TaskCount[];
+    task_counts?: TaskCount[];
 }
 
 export function HomePage() {
@@ -36,7 +36,7 @@ export function HomePage() {
 
             const data: TaskCountsResponse = await response.json();
             const countsMap = new Map(
-                data.task_counts.map(({queue_type, count}) => [queue_type, count])
+                (data.task_counts || []).map(({queue_type, count}) => [queue_type, count])
             );
             setTaskCounts(countsMap);
         } catch (error) {
@@ -51,7 +51,6 @@ export function HomePage() {
         countTasks();
     }, [accessToken]);
 
-    // Generate list items for all task types, whether there's data or not
     const taskItems = Object.entries(taskTypeMap).map(([, queueType]) => {
         const count = taskCounts.get(queueType) ?? 0;
         return (
