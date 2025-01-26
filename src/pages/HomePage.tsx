@@ -1,5 +1,5 @@
 import { useAuth } from '../contexts/AuthContext';
-import { ADMIN_API_BASE_URL, taskTypeMap, taskTypeReverseMap } from '../constants';
+import { ADMIN_API_BASE_URL, taskTypeMap, taskTypeReverseMap, TaskStatusMap } from '../constants';
 import { useEffect, useState } from 'react';
 
 interface TaskCount {
@@ -17,11 +17,11 @@ export function HomePage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const countTasks = async () => {
+    const countTasks = async (taskStatus: number) => {
         setIsLoading(true);
         setError(null);
         try {
-            const response = await fetch(`${ADMIN_API_BASE_URL}/tasks/counts`, {
+            const response = await fetch(`${ADMIN_API_BASE_URL}/tasks/counts?status=${taskStatus}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ export function HomePage() {
     };
 
     useEffect(() => {
-        countTasks();
+        countTasks(TaskStatusMap.unresolved);
     }, [accessToken]);
 
     const taskItems = Object.entries(taskTypeMap).map(([, queueType]) => {

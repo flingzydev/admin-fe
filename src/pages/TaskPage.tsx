@@ -1,5 +1,5 @@
 import { useAuth } from '../contexts/AuthContext';
-import {ADMIN_API_BASE_URL} from '../constants';
+import {ADMIN_API_BASE_URL, taskTypeMap} from '../constants';
 import {useEffect, useState, useCallback} from 'react';
 import { useParams } from 'react-router-dom';
 import { Task, User } from '../types';
@@ -94,7 +94,7 @@ export function TaskPage() {
 
                 <TaskCard task={task} taskType={taskType} />
 
-                {Number(taskType) === 3 && (
+                {Number(taskType) === taskTypeMap.verification && (
                    <VideoComparison user={user} setUser={setUser} task={task} getOldestTask={getOldestTask} getUser={getUser}  />
                 )}
 

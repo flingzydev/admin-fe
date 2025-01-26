@@ -2,7 +2,7 @@ export const API_BASE_URL = "https://api-stage.flingzy.com";
 export const ADMIN_API_BASE_URL = "https://admin-api-stage.flingzy.com";
 
 // task
-export const taskStatusMap = {
+export const TaskStatusMap = {
   unresolved: 0,
   resolved: 1,
   deferred: 2,
