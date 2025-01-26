@@ -4,6 +4,7 @@ import {useEffect, useState, useRef, useCallback} from 'react';
 import { useParams } from 'react-router-dom';
 import { Task, User } from '../types';
 import VideoCropper from "../components/VideoEditor.tsx";
+import {Link} from "react-router-dom"
 
 export function TaskPage() {
     const { accessToken, logout } = useAuth();
@@ -159,7 +160,7 @@ export function TaskPage() {
                         Task
                     </h2>
                     <ul className="space-y-3">
-                        {task && (
+                        {task ? (
                             <div>
                                 <p>ID: {task.id}</p>
                                 <p>Status: {taskStatusReverseMap[task.status]}</p>
@@ -175,6 +176,13 @@ export function TaskPage() {
                                     </pre>
                                 </div>
                             </div>
+                        ): (
+                            <>
+                                <p>There's no task for this given queue type.</p>
+                                <Link to="/home" style={{ color: 'blue' }}>
+                                    Go back to Homepage
+                                </Link>
+                            </>
                         )}
                     </ul>
                 </div>
