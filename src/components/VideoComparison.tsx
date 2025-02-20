@@ -83,6 +83,40 @@ const VideoComparison = ({
         }
     };
 
+    const handleReject = async () => {
+        if (!task?.dst_user_id) {
+            console.error('No user ID available');
+            return;
+        }
+        // Add confirmation dialog
+        const isConfirmed = confirm("Are you sure you want to reject this verification video?");
+        // Only proceed if user clicked "OK"
+        if (!isConfirmed) {
+            return;
+        }
+        try {
+            const response = await fetch(
+                `${ADMIN_API_BASE_URL}/tasks/reject-verification-video?user_id=${task.dst_user_id}&task_id=${task?.id}`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': `bearer ${accessToken}`
+                    },
+                }
+            );
+            if (!response.ok) {
+                alert('Failed to reject verification video');
+            }
+        } catch (error) {
+            console.log('error:', error)
+        } finally {
+            setUser(null);
+            getOldestTask();
+        }
+    };
+
     const handleConfirmVerification = async () => {
         try {
             const response = await fetch(
@@ -99,6 +133,9 @@ const VideoComparison = ({
             getOldestTask();
         } catch (error) {
             console.error('Failed to confirm video:', error);
+        } finally {
+            setUser(null);
+            getOldestTask();
         }
     };
     if (!user?.metadata?.verification_album_original_detail) {
@@ -114,6 +151,7 @@ const VideoComparison = ({
                         <VideoCropper
                             videoUrl={user.metadata.verification_album_original_detail}
                             onEdit={handleEdit}
+                            onReject={handleReject}
                         />
                     </div>
                 </div>

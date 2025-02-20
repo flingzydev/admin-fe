@@ -5,9 +5,10 @@ import "nouislider/dist/nouislider.css";
 interface VideoEditorProps {
     videoUrl: string | undefined;
     onEdit: (start: number, end: number, rotation: number) => void;
+    onReject: () => void;
 }
 
-const VideoEditor: React.FC<VideoEditorProps> = ({ videoUrl, onEdit }) => {
+const VideoEditor: React.FC<VideoEditorProps> = ({ videoUrl, onEdit, onReject }) => {
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const sliderRef = useRef<HTMLDivElement | null>(null);
     const animationFrameRef = useRef<number>();
@@ -156,6 +157,10 @@ const VideoEditor: React.FC<VideoEditorProps> = ({ videoUrl, onEdit }) => {
         onEdit(start, end, rotation);
     };
 
+    const handleReject = () => {
+        onReject();
+    };
+
     const formatTime = (time: number) => time.toFixed(2);
 
     const containerSize = 455;
@@ -222,15 +227,15 @@ const VideoEditor: React.FC<VideoEditorProps> = ({ videoUrl, onEdit }) => {
                     <div className="flex items-center gap-2">
                         <button
                             onClick={handleRotateLeft}
-                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                            className="px-1 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                         >
-                            Rotate Left
+                            Turn Left
                         </button>
                         <button
                             onClick={handleRotateRight}
-                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                            className="px-1 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                         >
-                            Rotate Right
+                            Turn Right
                         </button>
                         <button
                             onClick={isPlaying ? handlePause : handlePlay}
@@ -246,9 +251,15 @@ const VideoEditor: React.FC<VideoEditorProps> = ({ videoUrl, onEdit }) => {
                         </button>
                         <button
                             onClick={handleEdit}
-                            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                            className="px-1 py-2 bg-green-500 text-white rounded hover:bg-green-600"
                         >
                             Edit Video
+                        </button>
+                        <button
+                            onClick={handleReject}
+                            className="px-1 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                        >
+                            Reject
                         </button>
                     </div>
                 </div>
