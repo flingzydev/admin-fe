@@ -101,22 +101,21 @@ const VideoComparison = ({
             console.error('Failed to confirm video:', error);
         }
     };
+    if (!user?.metadata?.verification_album_original_detail) {
+        return null;
+    }
 
     return (
         <div className="mb-8">
             <div className="grid grid-cols-2 gap-6">
                 <div>
                     <h3 className="text-lg font-semibold mb-4">Original Video</h3>
-                    {user?.metadata?.verification_album_original_detail ? (
-                        <div className="aspect-[3/4]">
-                            <VideoCropper
-                                videoUrl={user.metadata.verification_album_original_detail}
-                                onEdit={handleEdit}
-                            />
-                        </div>
-                    ) : (
-                        <p>**No original video available**</p>
-                    )}
+                    <div className="aspect-[3/4]">
+                        <VideoCropper
+                            videoUrl={user.metadata.verification_album_original_detail}
+                            onEdit={handleEdit}
+                        />
+                    </div>
                 </div>
 
                 <div>
