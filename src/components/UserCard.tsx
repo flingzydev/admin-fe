@@ -1,12 +1,15 @@
 import { User } from '../types';
 import { GenderMap, BodyTypeMap, DrinkMap, SmokeMap, TattooMap, EthnicityMap, MBTIMap, RelationshipSpeedArray, InterestsMap } from '../constants';
+import {useState} from "react";
 
 interface UserCardProps {
     user?: User | null;
 }
 
 const UserCard = ({ user }: UserCardProps) => {
-    if (!user) return <div className="bg-white rounded-xl shadow-lg p-6"><p className="text-gray-500">No user data available</p></div>;
+    const [showModal, setShowModal] = useState(false);
+
+    if (!user) return null;
 
     const formatBirthday = (dateString: string) => {
         if (!dateString) return 'N/A';
@@ -33,7 +36,7 @@ const UserCard = ({ user }: UserCardProps) => {
                     {photos.map((photo: any) => (
                         <div key={photo.blob_id} className="w-52 h-52 rounded-lg overflow-hidden bg-gray-100">
                             <img
-                                src={photo.small_view_url}
+                                src={photo.medium_view_url}
                                 alt="Album photo"
                                 className="object-cover w-full h-full"
                             />
@@ -79,6 +82,51 @@ const UserCard = ({ user }: UserCardProps) => {
                                 <h2 className="text-xl font-semibold text-gray-900">{user.metadata?.first_name || 'N/A'}</h2>
                                 <p className="text-sm text-gray-500">{user.id || 'N/A'}</p>
                                 <p className="text-sm text-gray-500">{user.username || 'N/A'} / {user.email || 'N/A'} / {user.phone || 'N/A'}</p>
+                                {user?.metadata?.verification_album_detail && (
+                                    <div>
+                                        <button
+                                            className="cursor-pointer"
+                                            style={{
+                                                padding: '2px 4px',
+                                                backgroundColor: 'white',
+                                                border: '2px solid #d0d0d0',
+                                                borderRadius: '5px'
+                                            }}
+                                            onClick={() => setShowModal(true)}
+                                        >
+                                            Play Verification Video
+                                        </button>
+
+
+                                        {showModal && (
+                                            <div
+                                                className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+                                                onClick={() => setShowModal(false)}
+                                            >
+                                                <div
+                                                    className="relative max-w-4xl w-full"
+                                                    onClick={(e) => e.stopPropagation()}
+                                                >
+                                                    <button
+                                                        className="absolute -top-10 right-0 text-white text-2xl"
+                                                        onClick={() => setShowModal(false)}
+                                                    >
+                                                        ×
+                                                    </button>
+                                                    <video
+                                                        controls
+                                                        autoPlay
+                                                        className="w-full"
+                                                    >
+                                                        <source src={user.metadata.verification_album_detail}
+                                                                type="video/mp4"/>
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                             <div className="text-left">
                                 <div className="flex gap-2 mb-2">
@@ -126,29 +174,33 @@ const UserCard = ({ user }: UserCardProps) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                     <div>
                         <h3 className="text-md font-semibold text-gray-900 mb-2">Basic Information</h3>
-                        <div className="grid grid-cols-2 gap-y-2 text-sm">
-                            <div><span className="text-gray-600">Birthday:</span>
-                                <span>{formatBirthday(user.birthday)}</span></div>
-                            <div><span className="text-gray-600">Age:</span> <span>{user.metadata?.age || 'N/A'}</span>
+                        <div className="space-y-2 text-sm">
+                            <div className="grid grid-cols-2 gap-y-2">
+                                <div><span className="text-gray-600">Birthday:</span></div>
+                                <div>{formatBirthday(user.birthday)}</div>
+                                <div><span className="text-gray-600">Age:</span></div>
+                                <div>{user.metadata?.age || 'N/A'}</div>
+                                <div><span className="text-gray-600">Height:</span></div>
+                                <div>{formatHeight(user.height)}</div>
+                                <div><span className="text-gray-600">Gender:</span></div>
+                                <div>{GenderMap[user.gender] || 'N/A'}</div>
+                                <div><span className="text-gray-600">Ethnicity:</span></div>
+                                <div>{EthnicityMap[user.ethnicity] || 'N/A'}</div>
+                                <div><span className="text-gray-600">Body Type:</span></div>
+                                <div>{BodyTypeMap[user.body_type] || 'N/A'}</div>
+                                <div><span className="text-gray-600">Drink:</span></div>
+                                <div>{DrinkMap[user.drink] || 'N/A'}</div>
+                                <div><span className="text-gray-600">Smoke:</span></div>
+                                <div>{SmokeMap[user.smoke] || 'N/A'}</div>
+                                <div><span className="text-gray-600">Tattoo:</span></div>
+                                <div>{TattooMap[user.tattoo] || 'N/A'}</div>
+                                <div><span className="text-gray-600">MBTI:</span></div>
+                                <div>{MBTIMap[user.mbti] || 'N/A'}</div>
+                                <div><span className="text-gray-600">Relationship Speed:</span></div>
+                                <div>{RelationshipSpeedArray.find(speed => speed.value === user.relationship_speed)?.title || 'N/A'}</div>
                             </div>
-                            <div><span className="text-gray-600">Height:</span> <span>{formatHeight(user.height)}</span>
-                            </div>
-                            <div><span className="text-gray-600">Gender:</span>
-                                <span>{GenderMap[user.gender] || 'N/A'}</span></div>
-                            <div><span className="text-gray-600">Ethnicity:</span>
-                                <span>{EthnicityMap[user.ethnicity] || 'N/A'}</span></div>
-                            <div><span className="text-gray-600">Body Type:</span>
-                                <span>{BodyTypeMap[user.body_type] || 'N/A'}</span></div>
-                            <div><span className="text-gray-600">Drink:</span>
-                                <span>{DrinkMap[user.drink] || 'N/A'}</span></div>
-                            <div><span className="text-gray-600">Smoke:</span>
-                                <span>{SmokeMap[user.smoke] || 'N/A'}</span></div>
-                            <div><span className="text-gray-600">Tattoo:</span>
-                                <span>{TattooMap[user.tattoo] || 'N/A'}</span></div>
-                            <div><span className="text-gray-600">MBTI:</span> <span>{MBTIMap[user.mbti] || 'N/A'}</span></div>
-                            <div><span className="text-gray-600">Relationship Speed:</span> <span>{RelationshipSpeedArray.find(speed => speed.value === user.relationship_speed)?.title || 'N/A'}</span></div>
-                            <div className="col-span-2">
-                                <span className="text-gray-600">Interests:</span>
+                            <div className="mt-2">
+                                <div className="text-gray-600">Interests:</div>
                                 <div className="mt-1">
                                     {user.metadata?.interests ? (
                                         user.metadata.interests.split(',').map(id => InterestsMap[parseInt(id)] || '').filter(Boolean).join(', ') || 'N/A'
