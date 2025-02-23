@@ -42,7 +42,7 @@ const TaskCard = ({
     return (
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-6 pb-3 border-b border-gray-200">
-                Task Details
+                {`${taskTypeReverseMap[task.queue_type]} Task`}
             </h2>
             <dl className="space-y-2">
                 <TaskInfoRow label="ID" value={task.id} />

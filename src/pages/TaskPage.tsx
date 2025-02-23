@@ -1,11 +1,12 @@
 import { useAuth } from '../contexts/AuthContext';
-import {ADMIN_API_BASE_URL, taskTypeMap} from '../constants';
+import { ADMIN_API_BASE_URL, taskTypeMap } from '../constants';
 import {useEffect, useState, useCallback} from 'react';
 import { useParams } from 'react-router-dom';
 import { Task, User } from '../types';
 import UserCard from "../components/UserCard.tsx";
 import VideoComparison from "../components/VideoComparison.tsx";
 import TaskCard from "../components/TaskCard.tsx";
+import ConnectionStatus from "../components/ConnectionStatus.tsx";
 
 export function TaskPage() {
     const { accessToken, logout } = useAuth();
@@ -82,8 +83,11 @@ export function TaskPage() {
             <div className="max-w-4xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-2xl font-bold text-gray-900">
-                        Welcome!
+                        <a href={`/home`} className="hover:underline">
+                            Dashboard
+                        </a>
                     </h1>
+                    <ConnectionStatus />
                     <button
                         onClick={logout}
                         className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
@@ -92,13 +96,14 @@ export function TaskPage() {
                     </button>
                 </div>
 
-                <TaskCard task={task} taskType={taskType} />
+                <TaskCard task={task} taskType={taskType}/>
 
                 {Number(taskType) === taskTypeMap.verification && (
-                   <VideoComparison user={user} setUser={setUser} task={task} getOldestTask={getOldestTask} getUser={getUser}  />
+                    <VideoComparison user={user} setUser={setUser} task={task} getOldestTask={getOldestTask}
+                                     getUser={getUser}/>
                 )}
 
-                <UserCard user={user} />
+                <UserCard user={user}/>
             </div>
         </div>
     );

@@ -1,8 +1,8 @@
-import VideoCropper from './VideoEditor.tsx'
+import VideoCropper from './VideoEditor';
 import { Task, User } from '../types';
-import {ADMIN_API_BASE_URL, API_BASE_URL} from '../constants';
-import React, {useEffect, useRef, useState} from "react";
-import {useAuth} from "../contexts/AuthContext.tsx";
+import { ADMIN_API_BASE_URL } from '../constants';
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 
 interface VideoComparisonProps {
     user: User | null;
@@ -19,42 +19,30 @@ const VideoComparison = ({
     getOldestTask,
     getUser,
 }: VideoComparisonProps) => {
-    const { accessToken } = useAuth();
+    const { accessToken, ws } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
-    const ws = useRef<WebSocket | null>(null);
 
-    // Initialize WebSocket connection
+    // Subscribe to WebSocket messages
     useEffect(() => {
-        ws.current = new WebSocket(`${API_BASE_URL}/ws?token=Bearer ${accessToken}`);
+        if (!ws) return;
 
-        ws.current.onopen = () => {
-            console.log('Connected to WebSocket');
-        };
+        const unsubscribe = ws.subscribe((message) => {
+            console.log("WebSocket message received:", message);
 
-        ws.current.onmessage = (event) => {
-            console.log("WebSocket message received:", event.data);
-            const [status] = event.data.split("|");
-
-            if (status === 'edit-user-verification-video-completed') {
+            if (message.topic === 'edit-user-verification-video-completed') {
                 setIsEditing(false);
                 getUser(); // Fetch updated user data
             }
-        };
-
-        ws.current.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
+        });
 
         return () => {
-            if (ws.current) {
-                ws.current.close();
-            }
+            unsubscribe();
         };
-    }, [accessToken, getUser]);
+    }, [ws, getUser]);
 
     const handleEdit = async (start: number, end: number, rotation: number) => {
         if (!task?.dst_user_id) {
-            console.error('No user ID available');
+            alert('No user ID available');
             return;
         }
 
@@ -79,18 +67,18 @@ const VideoComparison = ({
             // Success response handling happens via WebSocket
         } catch (error) {
             console.error('Failed to request editing video:', error);
+            alert('Failed to request editing video');
             setIsEditing(false);
         }
     };
 
     const handleReject = async () => {
         if (!task?.dst_user_id) {
-            console.error('No user ID available');
+            alert('No user ID available');
             return;
         }
-        // Add confirmation dialog
+
         const isConfirmed = confirm("Are you sure you want to reject this verification video?");
-        // Only proceed if user clicked "OK"
         if (!isConfirmed) {
             return;
         }
@@ -106,11 +94,14 @@ const VideoComparison = ({
                     },
                 }
             );
+
             if (!response.ok) {
                 alert('Failed to reject verification video');
+                return;
             }
         } catch (error) {
-            console.log('error:', error)
+            console.error('Failed to reject verification video:', error);
+            alert('Failed to reject verification video');
         } finally {
             setUser(null);
             getOldestTask();
@@ -128,16 +119,19 @@ const VideoComparison = ({
                     },
                 }
             );
-            if (!response.ok) throw new Error('Failed to confirm video');
-            setUser(null);
-            getOldestTask();
+
+            if (!response.ok) {
+                throw new Error('Failed to confirm video');
+            }
         } catch (error) {
             console.error('Failed to confirm video:', error);
+            alert('Failed to confirm video');
         } finally {
             setUser(null);
             getOldestTask();
         }
     };
+
     if (!user?.metadata?.verification_album_original_detail) {
         return null;
     }
