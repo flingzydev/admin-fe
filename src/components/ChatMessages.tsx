@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useAuth } from "../contexts/AuthContext.tsx";
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import { ADMIN_API_BASE_URL } from "../constants";
+import {User} from "../types";
 
 const MessageIcon = () => (
     <svg className="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -26,9 +27,10 @@ interface ChatMessage {
 
 interface ChatMessagesProps {
     channelId: string;
+    user: User | null;
 }
 
-const ChatMessages = ({ channelId }: ChatMessagesProps) => {
+const ChatMessages = ({ channelId, user }: ChatMessagesProps) => {
     const { accessToken } = useAuth();
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [isLoadingMessages, setIsLoadingMessages] = useState(false);
@@ -198,11 +200,17 @@ const ChatMessages = ({ channelId }: ChatMessagesProps) => {
                 {messages.map((message) => (
                     <div
                         key={message.id}
-                        className="mb-4 last:mb-0 px-4"
+                        className={`mb-4 last:mb-0 px-4 ${
+                            message.src_user_id === user?.id ? 'flex justify-end' : 'flex justify-start'
+                        }`}
                     >
-                        <div className="inline-block max-w-[70%] bg-white rounded-lg p-3 shadow-sm">
+                        <div
+                            className={`inline-block max-w-[70%] rounded-lg p-3 shadow-sm ${
+                                message.src_user_id === user?.id ? 'bg-blue-300 text-white' : 'bg-gray-200'
+                            }`}
+                        >
                             <p className="text-gray-900 break-words">{message.content}</p>
-                            <span className="text-xs text-gray-500 mt-1 block">
+                            <span className="text-xs text-black mt-1 block">
                                 {formatDate(message.created_at)}
                             </span>
                         </div>

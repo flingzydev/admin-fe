@@ -29,7 +29,7 @@ const UserChat = ({
                     onChannelSelect={handleChannelSelect}
                     selectedChannelId={selectedChannel}
                 />
-                {selectedChannel && <ChatMessages channelId={selectedChannel}/>}
+                {selectedChannel && <ChatMessages channelId={selectedChannel} user={user} />}
             </div>
         </div>
     );
