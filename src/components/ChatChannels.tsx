@@ -166,7 +166,7 @@ const ChatChannels = ({ onChannelSelect, selectedChannelId, user }: ChatChannels
             </div>
             <div
                 ref={containerRef}
-                className="flex-1 overflow-y-auto"
+                className="flex-1 overflow-y-auto overscroll-y-none"
             >
                 {channels.map((channel) => (
                     <div

@@ -66,4 +66,5 @@ export interface User {
   tattoo: number;
   updated_at: string;
   username: string;
+  age: number;
 }

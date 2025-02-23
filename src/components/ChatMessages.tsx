@@ -190,7 +190,7 @@ const ChatMessages = ({ channelId, user }: ChatMessagesProps) => {
             </div>
             <div
                 ref={messagesContainerRef}
-                className="flex-1 overflow-y-auto"
+                className="flex-1 overflow-y-auto overscroll-y-none"
             >
                 {(isLoadingMessages || hasMoreMessages) && (
                     <div ref={scrollRef}>

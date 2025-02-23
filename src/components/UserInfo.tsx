@@ -7,7 +7,9 @@ interface UserCardProps {
 }
 
 const UserCard = ({ user }: UserCardProps) => {
-    const [showModal, setShowModal] = useState(false);
+    const [showVideoModal, setShowVideoModal] = useState(false);
+    const [showImageModal, setShowImageModal] = useState(false);
+    const [selectedImageUrl, setSelectedImageUrl] = useState("");
 
     if (!user) return null;
 
@@ -34,7 +36,13 @@ const UserCard = ({ user }: UserCardProps) => {
             return (
                 <div className="flex flex-wrap gap-4">
                     {photos.map((photo: any) => (
-                        <div key={photo.blob_id} className="w-52 h-52 rounded-lg overflow-hidden bg-gray-100">
+                        <div key={photo.blob_id}
+                            className="w-28 h-28 rounded-lg overflow-hidden bg-gray-100 cursor-pointer"
+                            onClick={() => {
+                            setSelectedImageUrl(photo.medium_view_url);
+                            setShowImageModal(true);
+                            }}
+                        >
                             <img
                                 src={photo.medium_view_url}
                                 alt="Album photo"
@@ -92,24 +100,24 @@ const UserCard = ({ user }: UserCardProps) => {
                                                 border: '2px solid #d0d0d0',
                                                 borderRadius: '5px'
                                             }}
-                                            onClick={() => setShowModal(true)}
+                                            onClick={() => setShowVideoModal(true)}
                                         >
                                             Play Verification Video
                                         </button>
 
 
-                                        {showModal && (
+                                        {showVideoModal && (
                                             <div
                                                 className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
-                                                onClick={() => setShowModal(false)}
+                                                onClick={() => setShowVideoModal(false)}
                                             >
                                                 <div
-                                                    className="relative max-w-4xl w-full"
+                                                    className="relative max-w-3xl"
                                                     onClick={(e) => e.stopPropagation()}
                                                 >
                                                     <button
                                                         className="absolute -top-10 right-0 text-white text-2xl"
-                                                        onClick={() => setShowModal(false)}
+                                                        onClick={() => setShowVideoModal(false)}
                                                     >
                                                         ×
                                                     </button>
@@ -122,6 +130,30 @@ const UserCard = ({ user }: UserCardProps) => {
                                                                 type="video/mp4"/>
                                                         Your browser does not support the video tag.
                                                     </video>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {showImageModal && (
+                                            <div
+                                                className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+                                                onClick={() => setShowImageModal(false)}
+                                            >
+                                                <div
+                                                    className="relative max-w-3xl"
+                                                    onClick={(e) => e.stopPropagation()}
+                                                >
+                                                    <button
+                                                        className="absolute -top-10 right-0 text-white text-2xl"
+                                                        onClick={() => setShowImageModal(false)}
+                                                    >
+                                                        ×
+                                                    </button>
+                                                    <img
+                                                        src={selectedImageUrl}
+                                                        alt="Selected photo"
+                                                        className="w-full h-auto"
+                                                    />
                                                 </div>
                                             </div>
                                         )}
@@ -175,32 +207,32 @@ const UserCard = ({ user }: UserCardProps) => {
                     <div>
                         <h3 className="text-md font-semibold text-gray-900 mb-2">Basic Information</h3>
                         <div className="space-y-2 text-sm">
-                            <div className="grid grid-cols-2 gap-y-2">
-                                <div><span className="text-gray-600">Birthday:</span></div>
+                            <div className="grid grid-cols-2">
+                                <div><span className="text-gray-600 font-semibold">Birthday:</span></div>
                                 <div>{formatBirthday(user.birthday)}</div>
-                                <div><span className="text-gray-600">Age:</span></div>
-                                <div>{user.metadata?.age || 'N/A'}</div>
-                                <div><span className="text-gray-600">Height:</span></div>
+                                <div><span className="text-gray-600 font-semibold">Age:</span></div>
+                                <div>{user.age || 'N/A'}</div>
+                                <div><span className="text-gray-600 font-semibold">Height:</span></div>
                                 <div>{formatHeight(user.height)}</div>
-                                <div><span className="text-gray-600">Gender:</span></div>
+                                <div><span className="text-gray-600 font-semibold">Gender:</span></div>
                                 <div>{GenderMap[user.gender] || 'N/A'}</div>
-                                <div><span className="text-gray-600">Ethnicity:</span></div>
+                                <div><span className="text-gray-600 font-semibold">Ethnicity:</span></div>
                                 <div>{EthnicityMap[user.ethnicity] || 'N/A'}</div>
-                                <div><span className="text-gray-600">Body Type:</span></div>
+                                <div><span className="text-gray-600 font-semibold">Body Type:</span></div>
                                 <div>{BodyTypeMap[user.body_type] || 'N/A'}</div>
-                                <div><span className="text-gray-600">Drink:</span></div>
+                                <div><span className="text-gray-600 font-semibold">Drink:</span></div>
                                 <div>{DrinkMap[user.drink] || 'N/A'}</div>
-                                <div><span className="text-gray-600">Smoke:</span></div>
+                                <div><span className="text-gray-600 font-semibold">Smoke:</span></div>
                                 <div>{SmokeMap[user.smoke] || 'N/A'}</div>
-                                <div><span className="text-gray-600">Tattoo:</span></div>
+                                <div><span className="text-gray-600 font-semibold">Tattoo:</span></div>
                                 <div>{TattooMap[user.tattoo] || 'N/A'}</div>
-                                <div><span className="text-gray-600">MBTI:</span></div>
+                                <div><span className="text-gray-600 font-semibold">MBTI:</span></div>
                                 <div>{MBTIMap[user.mbti] || 'N/A'}</div>
-                                <div><span className="text-gray-600">Relationship Speed:</span></div>
+                                <div><span className="text-gray-600 font-semibold">Relationship Speed:</span></div>
                                 <div>{RelationshipSpeedArray.find(speed => speed.value === user.relationship_speed)?.title || 'N/A'}</div>
                             </div>
                             <div className="mt-2">
-                                <div className="text-gray-600">Interests:</div>
+                                <div className="text-gray-600 font-semibold">Interests:</div>
                                 <div className="mt-1">
                                     {user.metadata?.interests ? (
                                         user.metadata.interests.split(',').map(id => InterestsMap[parseInt(id)] || '').filter(Boolean).join(', ') || 'N/A'
@@ -213,12 +245,12 @@ const UserCard = ({ user }: UserCardProps) => {
                     <div>
                         <h3 className="text-md font-semibold text-gray-900 mb-2">Preferences</h3>
                         <div className="space-y-2 text-sm">
-                            <div className="grid grid-cols-2 gap-y-2">
-                                <div><span className="text-gray-600">Height Preference:</span></div>
+                            <div className="grid grid-cols-2">
+                                <div><span className="text-gray-600 font-semibold">Height Preference:</span></div>
                                 <div>{formatHeight(prefs.height_pref_min)} - {formatHeight(prefs.height_pref_max)}</div>
-                                <div><span className="text-gray-600">Age Preference:</span></div>
+                                <div><span className="text-gray-600 font-semibold">Age Preference:</span></div>
                                 <div>{prefs.age_pref_min || 'N/A'} - {prefs.age_pref_max || 'N/A'} years old</div>
-                                <div><span className="text-gray-600">Gender Preference:</span></div>
+                                <div><span className="text-gray-600 font-semibold">Gender Preference:</span></div>
                                 <div>{GenderMap[prefs.gender_pref] || 'N/A'}</div>
                             </div>
                         </div>
