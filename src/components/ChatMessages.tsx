@@ -69,7 +69,7 @@ const ChatMessages = ({ channelId, user }: ChatMessagesProps) => {
                 const sortedMessages = newMessages.sort((a: ChatMessage, b: ChatMessage) =>
                     new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
                 );
-                oldestMessageTimeRef.current = sortedMessages[sortedMessages.length - 1].created_at;
+                oldestMessageTimeRef.current = sortedMessages[0].created_at;
                 setMessages(sortedMessages);
             }
 
@@ -114,7 +114,7 @@ const ChatMessages = ({ channelId, user }: ChatMessagesProps) => {
                 const sortedOlderMessages = olderMessages.sort((a: ChatMessage, b: ChatMessage) =>
                     new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
                 );
-                oldestMessageTimeRef.current = sortedOlderMessages[sortedOlderMessages.length - 1].created_at;
+                oldestMessageTimeRef.current = sortedOlderMessages[0].created_at;
 
                 setMessages(prev => {
                     const existingMessageIds = new Set(prev.map(msg => msg.id));
