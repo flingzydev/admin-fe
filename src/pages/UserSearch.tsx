@@ -65,7 +65,6 @@ const UserSearch: React.FC = () => {
                     Search
                 </button>
             </div>
-
             {searchResult && (
                 <div className="mt-4">
                     {isErrorResponse(searchResult) ? (

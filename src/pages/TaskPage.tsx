@@ -98,12 +98,12 @@ export function TaskPage() {
 
                 <TaskCard task={task} taskType={taskType}/>
 
+                <UserCard user={user}/>
+
                 {Number(taskType) === taskTypeMap.verification && (
                     <VideoComparison user={user} setUser={setUser} task={task} getOldestTask={getOldestTask}
                                      getUser={getUser}/>
                 )}
-
-                <UserCard user={user}/>
             </div>
         </div>
     );
