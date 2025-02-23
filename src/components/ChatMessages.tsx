@@ -181,7 +181,7 @@ const ChatMessages = ({ channelId, user }: ChatMessagesProps) => {
     );
 
     return (
-        <div className="flex flex-col h-[70vh] w-full bg-white">
+        <div className="flex flex-col h-[70vh] bg-white  max-w-lg">
             <div className="p-4 border-b border-gray-200">
                 <div className="flex items-center space-x-2">
                     <MessageIcon />
