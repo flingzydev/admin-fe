@@ -1,7 +1,7 @@
 import { useAuth } from '../contexts/AuthContext';
 import { ADMIN_API_BASE_URL, taskTypeMap } from '../constants';
 import {useEffect, useState, useCallback} from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Task, User } from '../types';
 import UserCard from "../components/UserCard.tsx";
 import VideoComparison from "../components/VideoComparison.tsx";
@@ -11,6 +11,8 @@ import ConnectionStatus from "../components/ConnectionStatus.tsx";
 export function TaskPage() {
     const { accessToken, logout } = useAuth();
     const { taskType } = useParams();
+    const [searchParams] = useSearchParams();
+    const status = parseInt(searchParams.get("status") || "0", 10); // Default to unresolved (0)
 
     const [task, setTask] = useState<Task | null>(null);
     const [user, setUser] = useState<User | null>(null);
@@ -39,7 +41,7 @@ export function TaskPage() {
     const getOldestTask = async () => {
         try {
             const response = await fetch(
-                `${ADMIN_API_BASE_URL}/tasks/oldest-task?status=0&queue_type=${taskType}`,
+                `${ADMIN_API_BASE_URL}/tasks/oldest-task?status=${status}&queue_type=${taskType}`,
                 {
                     method: 'GET',
                     headers: {
@@ -70,13 +72,13 @@ export function TaskPage() {
 
     useEffect(() => {
         getOldestTask();
-    }, []);
+    }, [getOldestTask, status, taskType]); // Include status and taskType in the dependency array
 
     useEffect(() => {
         if (task) {
             getUser();
         }
-    }, [task]);
+    }, [task, getUser]);
 
     return (
         <div className="min-h-screen bg-gray-50 p-8">
@@ -96,13 +98,25 @@ export function TaskPage() {
                     </button>
                 </div>
 
-                <TaskCard task={task} taskType={taskType}/>
+                <TaskCard
+                    task={task}
+                    taskType={taskType}
+                    status={status}
+                    setUser={setUser}
+                    getOldestTask={getOldestTask}
+                    isUserVerification={Number(taskType) === taskTypeMap.verification}
+                />
 
                 <UserCard user={user}/>
 
                 {Number(taskType) === taskTypeMap.verification && (
-                    <VideoComparison user={user} setUser={setUser} task={task} getOldestTask={getOldestTask}
-                                     getUser={getUser}/>
+                    <VideoComparison
+                        user={user}
+                        task={task}
+                        setUser={setUser}
+                        getOldestTask={getOldestTask}
+                        getUser={getUser}
+                    />
                 )}
             </div>
         </div>

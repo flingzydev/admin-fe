@@ -6,16 +6,16 @@ import { useAuth } from "../contexts/AuthContext";
 
 interface VideoComparisonProps {
     user: User | null;
-    setUser: React.Dispatch<React.SetStateAction<User | null>>;
     task: Task | null;
+    setUser: React.Dispatch<React.SetStateAction<User | null>>;
     getOldestTask: () => void;
     getUser: () => void;
 }
 
 const VideoComparison = ({
     user,
-    setUser,
     task,
+    setUser,
     getOldestTask,
     getUser,
 }: VideoComparisonProps) => {

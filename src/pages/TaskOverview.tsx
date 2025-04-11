@@ -18,17 +18,24 @@ interface TaskCountsResponse {
 
 type TaskCountsMap = Map<number, number>;
 
-const TaskOverview: React.FC = () => {
+interface TaskOverviewProps {
+    status?: number;
+    title?: string;
+}
+
+const TaskOverview: React.FC<TaskOverviewProps> = ({
+    status = TaskStatusMap.unresolved,
+    title = "Tasks Overview"
+}) => {
     const { accessToken } = useAuth();
     const [taskCounts, setTaskCounts] = useState<TaskCountsMap>(new Map());
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const countTasks = async (): Promise<void> => {
             try {
                 const response = await fetch(
-                    `${ADMIN_API_BASE_URL}/tasks/counts?status=${TaskStatusMap.unresolved}`,
+                    `${ADMIN_API_BASE_URL}/tasks/counts?status=${status}`,
                     {
                         headers: {
                             'Authorization': `Bearer ${accessToken}`,
@@ -38,7 +45,7 @@ const TaskOverview: React.FC = () => {
                 );
 
                 if (!response.ok) {
-                    throw new Error('Failed to fetch task counts');
+                    alert(`Failed to fetch ${status} task counts`);
                 }
 
                 const data: TaskCountsResponse = await response.json();
@@ -48,29 +55,28 @@ const TaskOverview: React.FC = () => {
                 setTaskCounts(countsMap);
             } catch (err) {
                 const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
-                setError(errorMessage);
+                alert(errorMessage);
             } finally {
                 setIsLoading(false);
             }
         };
 
         void countTasks();
-    }, [accessToken]);
 
-    if (error) {
-        return <div className="text-red-600 p-4">{error}</div>;
-    }
+        // Reset loading state when status changes
+        setIsLoading(true);
+    }, [accessToken, status]);
 
     return (
         <div className="bg-white rounded-xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Tasks Overview</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">{title}</h2>
             <ul className="space-y-3">
                 {(Object.entries(taskTypeMap) as [string, number][]).map(([, queueType]) => (
                     <li
                         key={queueType}
                         className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                     >
-                        <a href={`/tasks/${queueType}`} className="hover:underline">
+                        <a href={`/tasks/${queueType}?status=${status}`} className="hover:underline">
                             <span className="font-semibold">
                                 {taskTypeReverseMap[queueType as keyof typeof taskTypeReverseMap]}
                             </span>

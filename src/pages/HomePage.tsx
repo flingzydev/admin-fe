@@ -4,11 +4,12 @@ import TaskOverview from './TaskOverview';
 import UserSearch from './UserSearch';
 import ConnectionStatus from "../components/ConnectionStatus.tsx";
 import TabButton from "../components/TabButton.tsx";
+import {TaskStatusMap} from "../constants";
 
-type TabType = 'tasks' | 'users';
+type TabType = 'tasksUnresolved' | 'tasksDeferred' | 'users' ;
 
 export const HomePage: React.FC = () => {
-    const [activeTab, setActiveTab] = useState<TabType>('tasks');
+    const [activeTab, setActiveTab] = useState<TabType>('tasksUnresolved');
     const {logout} = useAuth();
 
     return (
@@ -31,10 +32,16 @@ export const HomePage: React.FC = () => {
 
                 <div className="mb-6 flex gap-2">
                     <TabButton
-                        active={activeTab === 'tasks'}
-                        onClick={() => setActiveTab('tasks')}
+                        active={activeTab === 'tasksUnresolved'}
+                        onClick={() => setActiveTab('tasksUnresolved')}
                     >
-                        Tasks
+                        Tasks Unresolved
+                    </TabButton>
+                    <TabButton
+                        active={activeTab === 'tasksDeferred'}
+                        onClick={() => setActiveTab('tasksDeferred')}
+                    >
+                        Tasks Deferred
                     </TabButton>
                     <TabButton
                         active={activeTab === 'users'}
@@ -44,7 +51,9 @@ export const HomePage: React.FC = () => {
                     </TabButton>
                 </div>
 
-                {activeTab === 'tasks' ? <TaskOverview /> : <UserSearch />}
+                {activeTab === 'tasksUnresolved' && <TaskOverview status={TaskStatusMap.unresolved} title="Unresolved Tasks" />}
+                {activeTab === 'tasksDeferred' && <TaskOverview status={TaskStatusMap.deferred} title="Deferred Tasks" />}
+                {activeTab === 'users' && <UserSearch />}
             </div>
         </div>
     );
