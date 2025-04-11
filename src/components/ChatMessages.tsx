@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../contexts/AuthContext.tsx";
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import { ADMIN_API_BASE_URL } from "../constants";
-import { User } from "../types";
+import { ChatMessage, User } from "../types";
+import MediaDisplay from "./MediaDisplay"; // Import the simple media display component
 
 const MessageIcon = () => (
   <svg
@@ -38,33 +39,6 @@ const LoadingSpinner = () => (
     />
   </svg>
 );
-
-export interface ChatMessageMetadata {
-  image_view_url?: string;
-  video_view_url?: string;
-  video_thumbnail_view_url?: string;
-  blob_height?: number;
-  blob_width?: number;
-  is_view_once?: boolean;
-  is_view_once_viewed?: boolean;
-}
-
-export interface ChatMessage {
-  id: string;
-  metadata?: ChatMessageMetadata;
-  created_at: string;
-  updated_at: string;
-  chat_channel_id: string;
-  src_user_id: string;
-  dst_user_id: string;
-  user_id_1_emoji?: string;
-  user_id_2_emoji?: string;
-  content?: string;
-  video_id?: string;
-  image_id?: string;
-  deleted: boolean;
-  sending?: boolean;
-}
 
 interface ChatMessagesProps {
   channelId: string;
@@ -226,6 +200,11 @@ const ChatMessages = ({ channelId, user }: ChatMessagesProps) => {
     return date.toLocaleString();
   };
 
+  // Helper function to check if message has media
+  const hasMedia = (message: ChatMessage) => {
+    return !!(message.image_id || message.video_id);
+  };
+
   const LoadingIndicator = () => (
     <div className="flex justify-center items-center p-4">
       <LoadingSpinner />
@@ -233,7 +212,7 @@ const ChatMessages = ({ channelId, user }: ChatMessagesProps) => {
   );
 
   return (
-    <div className="flex flex-col h-[70vh] bg-white  max-w-lg">
+    <div className="flex flex-col h-[70vh] bg-white w-[540px] border-2">
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center space-x-2">
           <MessageIcon />
@@ -265,7 +244,11 @@ const ChatMessages = ({ channelId, user }: ChatMessagesProps) => {
                   : "bg-gray-200"
               }`}
             >
-              <p className="text-gray-900 break-words">{message.content}</p>
+              {hasMedia(message) ? (
+                <MediaDisplay message={message} />
+              ) : (
+                <p className="text-gray-900 break-words">{message.content}</p>
+              )}
               <span className="text-xs text-black mt-1 block">
                 {formatDate(message.created_at)}
               </span>

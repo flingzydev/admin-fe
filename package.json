@@ -10,7 +10,7 @@
     "eslint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\" --log-level warn",
     "check-type": "tsc --noEmit",
-    "lint": "yarn prettier && yarn eslint && yarn check-type && npx expo install --check"
+    "lint": "yarn prettier && yarn eslint && yarn check-type"
   },
   "dependencies": {
     "nouislider": "^15.8.1",

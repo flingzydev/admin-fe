@@ -18,6 +18,13 @@ export interface Task {
   updated_at: string;
 }
 
+export interface ImageDetails {
+  blob_id: string;
+  medium_view_url: string;
+  small_view_url: string;
+  is_uploading: boolean; // this is to track if image uploading locally in an easy way
+}
+
 interface UserMetadata {
   global_logout_ts?: number; // Timestamp in nanoseconds for global logout
   first_name?: string; // User's first name
@@ -65,4 +72,31 @@ export interface User {
   updated_at: string;
   username: string;
   age: number;
+}
+
+export interface ChatMessageMetadata {
+  image_view_url?: string;
+  video_view_url?: string;
+  video_thumbnail_view_url?: string;
+  blob_height?: number;
+  blob_width?: number;
+  is_view_once?: boolean;
+  is_view_once_viewed?: boolean;
+}
+
+export interface ChatMessage {
+  id: string;
+  metadata?: ChatMessageMetadata;
+  created_at: string;
+  updated_at: string;
+  chat_channel_id: string;
+  src_user_id: string;
+  dst_user_id: string;
+  user_id_1_emoji?: string;
+  user_id_2_emoji?: string;
+  content?: string;
+  video_id?: string;
+  image_id?: string;
+  deleted: boolean;
+  sending?: boolean;
 }

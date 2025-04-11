@@ -41,7 +41,7 @@ export function TaskPage() {
     }
   }, [accessToken, task?.dst_user_id]);
 
-  const getOldestTask = async () => {
+  const getOldestTask = useCallback(async () => {
     try {
       const response = await fetch(
         `${ADMIN_API_BASE_URL}/tasks/oldest-task?status=${status}&queue_type=${taskType}`,
@@ -71,11 +71,11 @@ export function TaskPage() {
       console.error("Failed to get task:", error);
       throw new Error("Failed to get task");
     }
-  };
+  }, [accessToken, status, taskType]);
 
   useEffect(() => {
     getOldestTask();
-  }, [getOldestTask, status, taskType]); // Include status and taskType in the dependency array
+  }, [getOldestTask]);
 
   useEffect(() => {
     if (task) {

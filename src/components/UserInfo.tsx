@@ -1,4 +1,4 @@
-import { User } from "../types";
+import { User, ImageDetails } from "../types";
 import {
   GenderMap,
   BodyTypeMap,
@@ -45,7 +45,7 @@ const UserCard = ({ user }: UserCardProps) => {
       const photos = JSON.parse(albumDetailsStr);
       return (
         <div className="flex flex-wrap gap-4">
-          {photos.map((photo: any) => (
+          {photos.map((photo: ImageDetails) => (
             <div
               key={photo.blob_id}
               className="w-28 h-28 rounded-lg overflow-hidden bg-gray-100 cursor-pointer"
