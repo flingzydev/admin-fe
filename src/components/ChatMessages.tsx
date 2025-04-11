@@ -39,12 +39,31 @@ const LoadingSpinner = () => (
   </svg>
 );
 
-interface ChatMessage {
+export interface ChatMessageMetadata {
+  image_view_url?: string;
+  video_view_url?: string;
+  video_thumbnail_view_url?: string;
+  blob_height?: number;
+  blob_width?: number;
+  is_view_once?: boolean;
+  is_view_once_viewed?: boolean;
+}
+
+export interface ChatMessage {
   id: string;
-  content: string;
+  metadata?: ChatMessageMetadata;
   created_at: string;
+  updated_at: string;
+  chat_channel_id: string;
   src_user_id: string;
   dst_user_id: string;
+  user_id_1_emoji?: string;
+  user_id_2_emoji?: string;
+  content?: string;
+  video_id?: string;
+  image_id?: string;
+  deleted: boolean;
+  sending?: boolean;
 }
 
 interface ChatMessagesProps {
