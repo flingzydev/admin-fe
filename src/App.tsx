@@ -1,8 +1,8 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { LoginPage } from './pages/LoginPage';
-import { HomePage } from './pages/HomePage';
-import { TaskPage } from './pages/TaskPage';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { LoginPage } from "./pages/LoginPage";
+import { HomePage } from "./pages/HomePage";
+import { TaskPage } from "./pages/TaskPage";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
@@ -23,19 +23,22 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route path="/tasks/:taskType"
+          <Route
+            path="/tasks/:taskType"
             element={
               <PrivateRoute>
                 <TaskPage />
               </PrivateRoute>
             }
           />
-          <Route path="/"
+          <Route
+            path="/"
             element={
               <PrivateRoute>
                 <Navigate to="/home" />
               </PrivateRoute>
-            } />
+            }
+          />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

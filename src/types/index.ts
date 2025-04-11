@@ -1,4 +1,3 @@
-
 export interface TaskCount {
   queue_type: number;
   count: number;
@@ -39,7 +38,6 @@ interface UserMetadata {
   age?: number; // User's age (calculated on the fly)
   is_favorite?: number; // 1 if the user is marked as a favorite
 }
-
 
 export interface User {
   birthday: string;

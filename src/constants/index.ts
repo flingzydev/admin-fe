@@ -34,7 +34,6 @@ export const taskTypeReverseMap: TaskTypeMap = {
   3: "User Verification",
 };
 
-
 // user
 export const GenderMap: { [key: number]: string } = {
   1: "Man",
